@@ -1,8 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const connectDB = require('./config/db'); 
-const resourceRoutes = require('./routes/resource.routes');
-
+// const createUserRoutes = require('./routes/shipment.routes');
 const app = express();
 
 // Global Middleware
@@ -10,19 +9,17 @@ app.use(morgan('dev'));
 app.use(express.json()); 
 
 // Fire up database connection
-connectDB(); 
-
+if (connectDB()) 
 // Mount generic api routes
-app.use('/api/v1/resources', resourceRoutes);
+app.use('/api/v1/users',require('./routes/shipment.routes'));
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-    res.json({ status: 'Server is up and running smoothly!' });
-});
+
 
 // 404 Fallback Route
 app.use((req, res) => {
+    console.log(`404 Not Found: ${req.originalUrl}`);
     res.status(404).json({ error: 'Endpoint Not Found' });
+    
 });
 
 // Listen on Localhost Loopback 
